@@ -6,8 +6,15 @@ import StockList from './components/StockList';
 export default function App(){
     const [stocks, setStocks] = useState([]);
     const fetchStocks = async () =>{
+      try{
         const resp = await api.get('/stocks');
         setStocks(resp.data);
+      }
+      catch(err){
+        const msg = err.response?.data?.error || err.message;
+        alert(`Could not load stocks`)
+      }
+        
 
     };
 

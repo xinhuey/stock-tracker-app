@@ -11,22 +11,35 @@ export default function StockList({ stocks, onRemove }) {
         </tr>
       </thead>
       <tbody>
-        {stocks.map(s => (
-          <tr key={s.symbol}>
-            <td style={{ padding:8 }}>{s.symbol}</td>
-            <td style={{ padding:8 }}>${s.price.toFixed(2)}</td>
-            <td style={{ padding:8 }}>{s.change.toFixed(2)}</td>
-            <td style={{ padding:8 }}>{s.changePct.toFixed(2)}%</td>
-            <td style={{ padding:8 }}>
-              <button onClick={async () => {
-                await api.delete(`/stocks/${s.symbol}`);
-                onRemove();
-              }}>
-                Remove
-              </button>
-            </td>
-          </tr>
-        ))}
+        {stocks.map(s => {
+          // defensively coerce or placeholder
+          const price = Number.isFinite(s.price) 
+            ? s.price.toFixed(2) 
+            : '—';
+          const change = Number.isFinite(s.change)
+            ? s.change.toFixed(2)
+            : '—';
+          const changePct = Number.isFinite(s.changePct)
+            ? s.changePct.toFixed(2) + '%'
+            : '—';
+
+          return (
+            <tr key={s.symbol}>
+              <td style={{ padding:8 }}>{s.symbol}</td>
+              <td style={{ padding:8 }}>{price !== '—' ? `$${price}` : 'N/A'}</td>
+              <td style={{ padding:8 }}>{change}</td>
+              <td style={{ padding:8 }}>{changePct}</td>
+              <td style={{ padding:8 }}>
+                <button onClick={async () => {
+                  await api.delete(`/stocks/${s.symbol}`);
+                  onRemove();
+                }}>
+                  Remove
+                </button>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
