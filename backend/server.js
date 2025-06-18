@@ -7,8 +7,13 @@ const stockRoutes = require('./routes/stocks');
 const app = express();
 app.use(cors(), express.json());
 
-mongoose.connect(process.env_MONGODB_URI, {
-    useNewUrlParser : true, useUnifiedTopology: true
+console.log('ENV FILE LOADED:', require('dotenv').config());
+console.log('MONGODB_URI is', process.env.MONGODB_URI);
+
+
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser : true, 
+    useUnifiedTopology: true
 })
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
