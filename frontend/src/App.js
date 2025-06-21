@@ -45,6 +45,8 @@ export default function App(){
       
     };
 
+    
+
     useEffect(() =>{
         fetchStocks();
         // auto refreshes every 60s
