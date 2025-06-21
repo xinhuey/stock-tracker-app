@@ -1,6 +1,6 @@
 import { api } from '../api';
 
-export default function StockList({ stocks, onRemove }) {
+export default function StockList({ stocks, onRemove, onSelect }) {
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
       <thead>
@@ -24,7 +24,7 @@ export default function StockList({ stocks, onRemove }) {
             : '—';
 
           return (
-            <tr key={s.symbol}>
+            <tr key={s.symbol} onClick={() => onSelect && onSelect(s.symbol)} style={{cursor: onSelect ? 'pointer' : 'default'}}>
               <td style={{ padding:8 }}>{s.symbol}</td>
               <td style={{ padding:8 }}>{price !== '—' ? `$${price}` : 'N/A'}</td>
               <td style={{ padding:8 }}>{change}</td>

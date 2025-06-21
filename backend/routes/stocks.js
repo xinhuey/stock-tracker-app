@@ -9,6 +9,7 @@ async function fetchQuote(symbol){
     const url = `https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?adjusted=true&apiKey=${key}`;
     const resp = await axios.get(url);
     const item = resp.data.results[0];
+    console.log(item)
     return {
         symbol,
         price: item.c,                            // last close
@@ -70,5 +71,30 @@ router.delete('/:symbol', async(req, res) => {
     await Stock.findOneAndDelete({symbol : symbol.toUpperCase()});
     res.sendStatus(204);
 });
+
+// GET historical prices for a symbol 
+router.get('/:symbol/history', async(req, res) => {
+  try{
+    const{ symbol } = req.params;
+    const days = parseInt(req.query.days || '7', 10);
+    const to = new Date();
+    const from = new Date();
+    from.setDate(to.getDate() - days);
+    const key = process.env.POLYGON_API_KEY;
+    const start = from.toISOString().split('T')[0];
+    const end = to.toISOString().split('T')[0];
+    const url = `https://api.polygon.io/v2/aggs/ticker/${symbol}/range/1/day/${start}/${end}?adjusted=true&apiKey=${key}`;
+    const resp = await axios.get(url);
+    const history = (resp.data.results || []).map(d => ({
+      date:new Date(d.t).toISOString().split('T')[0],
+      close: d.c
+    }));
+    res.json(history);
+  }
+  catch(err){
+    console.error('Error fetching history: ', err.message);
+    res.status(500).json({error: 'Failed to load history'});
+  }
+})
 
 module.exports = router;

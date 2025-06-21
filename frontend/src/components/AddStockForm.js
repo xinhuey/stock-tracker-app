@@ -23,7 +23,7 @@ export default function AddStockForm({onAdded}){
             <input
                 value = {symbol}
                 onChange = {e => setSymbol(e.target.value)}
-                placeholder = "e.h. AAPL"
+                placeholder = "e.g. AAPL"
                 style = {{padding: 8, fontSize: 16}}
             />
             <button type = "submit" style = {{marginLeft: 8, padding: '8px, 12px'}}>
