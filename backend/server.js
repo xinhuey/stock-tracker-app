@@ -1,5 +1,4 @@
 require('dotenv').config();
-console.log('ALPHA_VANTAGE_KEY = ', process.env.ALPHA_VANTAGE_KEY);
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');

@@ -5,19 +5,15 @@ const router = express.Router();
 
 // helper to fetch quote from Alpha Vantage
 async function fetchQuote(symbol){
-    const key = process.env.ALPHA_VANTAHE_KEY;
-    const url = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${key}`;
+    const key = process.env.POLYGON_API_KEY;
+    const url = `https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?adjusted=true&apiKey=${key}`;
     const resp = await axios.get(url);
-    const data = resp.data['Global Quote'];
-    console.log(symbol, JSON.stringify(resp.data, null, 2));
-    if (!data || Object.keys(data).length === 0){
-        throw new Error(`No data returned for symbol ${symbol}`);
-    }
+    const item = resp.data.results[0];
     return {
-        symbol: data['01. symbol'],
-        price: parseFloat(data['0.5. price']),
-        change: parseFloat(data['0.9. change']),
-        changePct: parseFloat(data['10. change percent'])
+        symbol,
+        price: item.c,                            // last close
+        change: item.c - item.o,                  // last close minus open
+        changePct: ((item.c - item.o) / item.o) * 100
     };
 }
 
