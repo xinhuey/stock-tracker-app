@@ -3,7 +3,7 @@ const axios = require('axios');
 const Stock = require('../models/Stock');
 const router = express.Router();
 
-// helper to fetch quote from Alpha Vantage
+// helper to fetch quote from Polygon
 async function fetchQuote(symbol){
     const key = process.env.POLYGON_API_KEY;
     const url = `https://api.polygon.io/v2/aggs/ticker/${symbol}/prev?adjusted=true&apiKey=${key}`;

@@ -8,6 +8,21 @@ export default function App(){
     const [stocks, setStocks] = useState([]);
     const [selected, setSelected] = useState(null);
     const [history, setHistory] = useState([]);
+    const [isAuth, setIsAuth] = useState(!!localStorage.getItem('token'));
+
+    const handleLogin = () =>{
+      setIsAuth(true);
+      fetchStocks();
+    };
+
+    const handleLogout = () => {
+      localStorage.removeItem('token');
+      setIsAuth(false);
+      setStocks([]);
+      setSelected(null);
+      setHistory([]);
+    };
+
     const fetchStocks = async () =>{
       try{
         const resp = await api.get('/stocks');
@@ -48,12 +63,24 @@ export default function App(){
     
 
     useEffect(() =>{
+        //Handle authentication 
+        if (!isAuth) return;
         fetchStocks();
         // auto refreshes every 60s
         const id = setInterval(fetchStocks, 60_000);
         return () => clearInterval(id);
-    }, []);
+    }, [isAuth]);
 
+    if (!isAuth){
+      return(
+        <div style = {{maxWidth: 600, margin: '40px auto', fontFamily: 'sans-serif'}}>
+          <h2>Login</h2>
+          <LoginForm onLogin={handleLogin}/>
+          <h3>Register</h3>
+          <RegisterForm />
+        </div>
+      );
+    }
     return (
     <div style={{ maxWidth: 600, margin: '40px auto', fontFamily: 'sans-serif' }}>
       <h2>My Stock Tracker</h2>
