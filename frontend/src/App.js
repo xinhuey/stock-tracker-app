@@ -3,6 +3,8 @@ import {api} from './api';
 import AddStockForm from './components/AddStockForm';
 import StockList from './components/StockList';
 import StockChart from './components/StockChart';
+import LoginForm from './components/LoginForm';
+import RegisterForm from './components/RegisterForm';
 
 export default function App(){
     const [stocks, setStocks] = useState([]);
