@@ -6,3 +6,7 @@
 ### Bugs
 
 1. Error loading stocks for individual user
+
+### Next Steps
+
+1. Save stocks related to a user in the schema

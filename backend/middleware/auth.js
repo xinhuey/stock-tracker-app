@@ -6,7 +6,7 @@ module.exports = function(req, res, next){
         return res.status(401).json({error: 'Unauthorised'
         });
     }
-    const token = auth.aplit(' ')[1];
+    const token = auth.split(' ')[1];
     try{
         const payload = jwt.verify(token, process.env.JWT_SECRET);
         req.user = payload.id;
