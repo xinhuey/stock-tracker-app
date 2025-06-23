@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.error(err));
 
-app.use('/api/stocks', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/stocks', auth, stockRoutes)
 
 const PORT = process.env.PORT || 5000;

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bycrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true, lowercase: true, trim: true},
@@ -8,12 +8,12 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next){
     if (!this.isModified('password')) return next();
-    this.password = await bycrypt.hash(this.password, 10);
+    this.password = await bcrypt.hash(this.password, 10);
     next();
 });
 
 userSchema.methods.comparePassword = function(candidate){
-    return bycrypt.compare(candidate, this.password);
+    return bcrypt.compare(candidate, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);

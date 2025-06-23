@@ -14,7 +14,7 @@ export default function LoginForm({onLogin}){
         }
         catch(err){
             const msg = err.response?.data?.error || err.message;
-            aler(`Login failed: ${msg}`);
+            alert(`Login failed: ${msg}`);
         }
     };
 

@@ -22,7 +22,7 @@ export default function RegisterForm(){
     return (
         <form onSubmit={handleSubmit} style = {{marginBottom: 16}}>
             <input value ={email} onChange={e => setEmail(e.target.value)} placeholder="Email:"/>
-            <input type = "password" value={password} onChange={e => setPassword(e.target.value)} placehodler ="Password"/>
+            <input type = "password" value={password} onChange={e => setPassword(e.target.value)} placeholder ="Password"/>
             <button type = "submit">Register</button>
         </form>
     );
