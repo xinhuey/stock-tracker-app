@@ -85,7 +85,11 @@ export default function App(){
     }
     return (
     <div style={{ maxWidth: 600, margin: '40px auto', fontFamily: 'sans-serif' }}>
-      <h2>My Stock Tracker</h2>
+      <div style = {{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <h2 style = {{margin: 0}}>My Stock Tracker</h2>
+        <button onClick= {handleLogout}>Logout</button>
+      </div>
+      
       <AddStockForm onAdded={fetchStocks} />
       <StockList stocks={stocks} onRemove={fetchStocks} onSelect={handleSelect}/>
       {selected && history.length > 0 && (
