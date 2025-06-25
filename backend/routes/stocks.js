@@ -21,7 +21,7 @@ async function fetchQuote(symbol){
 // GET all tracked stocks with live quotes
 router.get('/', async (req, res) => {
   try {
-    const stocks = await Stock.find().sort('symbol');
+    const stocks = await Stock.find({user: req.user}).sort('symbol');
     const quotes = [];
 
     for (let { symbol } of stocks) {
@@ -51,7 +51,10 @@ router.post('/', async (req, res) => {
     }
 
     // normalize and save
-    const stock = new Stock({ symbol: symbol.toUpperCase().trim() });
+    const stock = new Stock({ 
+      user: req.user,
+      symbol: symbol.toUpperCase().trim() 
+    });
     await stock.save();
 
     res.status(201).json(stock);
@@ -68,7 +71,7 @@ router.post('/', async (req, res) => {
 //DELETE a symbol
 router.delete('/:symbol', async(req, res) => {
     const { symbol } = req.params;
-    await Stock.findOneAndDelete({symbol : symbol.toUpperCase()});
+    await Stock.findOneAndDelete({user : req.user, symbol : symbol.toUpperCase()});
     res.sendStatus(204);
 });
 
