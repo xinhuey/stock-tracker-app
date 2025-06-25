@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
       {$addToSet: {stocklist: normalized}},
       {new: true}
     );
-    res.status(201).json(symbol: normalized);
+    res.status(201).json({symbol: normalized});
   } catch (err) {
     // duplicate‐key (already tracking this symbol)
     
