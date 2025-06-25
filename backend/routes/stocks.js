@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
-const Stock = require('../models/Stock');
+const Stock = require('../models/User');
+const User = require('../models/User');
 const router = express.Router();
 
 // helper to fetch quote from Polygon
@@ -21,10 +22,11 @@ async function fetchQuote(symbol){
 // GET all tracked stocks with live quotes
 router.get('/', async (req, res) => {
   try {
-    const stocks = await Stock.find({user: req.user}).sort('symbol');
+    const user = await User.findById(req.user).lean();
+    if (!user) return res.status(404).json({error:'User not found'})
     const quotes = [];
 
-    for (let { symbol } of stocks) {
+    for (let { symbol } of user.stocklist) {
       try {
         quotes.push(await fetchQuote(symbol));
       } catch (err) {
@@ -51,18 +53,16 @@ router.post('/', async (req, res) => {
     }
 
     // normalize and save
-    const stock = new Stock({ 
-      user: req.user,
-      symbol: symbol.toUpperCase().trim() 
-    });
-    await stock.save();
-
-    res.status(201).json(stock);
+    const normalized = symbol.toUpperCase().trim();
+    await User.findByIdAndUpdate(
+      req.user,
+      {$addToSet: {stocklist: normalized}},
+      {new: true}
+    );
+    res.status(201).json(symbol: normalized);
   } catch (err) {
     // duplicate‐key (already tracking this symbol)
-    if (err.code === 11000) {
-      return res.status(400).json({ error: 'That symbol is already in your watchlist.' });
-    }
+    
     console.error('Error saving stock:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -71,7 +71,9 @@ router.post('/', async (req, res) => {
 //DELETE a symbol
 router.delete('/:symbol', async(req, res) => {
     const { symbol } = req.params;
-    await Stock.findOneAndDelete({user : req.user, symbol : symbol.toUpperCase()});
+    await User.findByIdAndUpdate(req.user, {
+      $pull: {stocklist: symbol.toUpperCase()}
+    });
     res.sendStatus(204);
 });
 
